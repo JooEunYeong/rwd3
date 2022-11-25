@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반응형</title>
+    <style>
+        /* 초기화(initialization) */
+        * {box-sizing: border-box;}
+        body, h1, h2, ul {margin: 0; padding: 0;}
+        li{list-style: none;}
+        a{text-decoration: none;}
+        address {font-style: normal;}
+        .hidden{overflow: hidden; position: absolute;
+            width: 1px; height: 1px;
+            margin: -1px;
+            clip-path: polygon(0 0, 0 0, 0 0);}
+        /* header */
+        #header{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px; 
+            background-color: orange;
+            border-bottom: 1px solid #000;
+        }
+        #header h1{position: absolute; top: 15px; left: 100px;} /* gnb를 항상 가운데에 두기 위해 absolute적용 */
+        #header h1 a{color: #000; font-size: 50px;}        
+        /* membership */
+        #member{order: 1; position: absolute; top: 40px; right: 100px;} /* gnb를 항상 가운데에 두기 위해 absolute적용 */
+        #member ul{display: flex;}
+        #member ul li{margin-left: 20px;}
+        #member ul li a{display: block;}
+        /* gnb메뉴 보기 버튼 */
+        .viewGnb{ display: none; 
+            position: absolute; top: 30px; left: 50px; 
+            width: 50px; height: 50px;
+            border: 1px solid #000;}
+        .viewGnb::before{content: ""; 
+            position: absolute; top: 15px; left: 10px;
+            width: 30px; border-bottom: 1px solid #000;}
+        .viewGnb::after{content: "";
+            position: absolute; top: 30px; left: 10px;
+            width: 30px; border-bottom: 1px solid #000;}
+        .viewGnb:hover::before{transform: translateY(7.5px) rotate(45deg);} 
+        .viewGnb:hover::after{transform: translateY(-7.5px) rotate(-45deg) ;}
+        /*시작지점(7.5px)부터 45도 회전. 시작지점 따로 안 정해두면 가운데에서 시작한다.*/
+        /* gnb */
+        #gnb ul{ display: flex; }
+        #gnb ul li{margin: 0 20px;}
+        #gnb ul li a{color: #000; font-size: 18px;}
+        /* main */        
+        main{ display: flex; width: 1200px; margin: 50px auto; background: #faaeff;}
+        section{width: 100%; height: 400px; 
+            background-color: #c4ffce;
+            border: 1px solid #000;} 
+        section:not(:last-child) {margin-right: 1%;}
+        /*25%보다 크면 자동으로 4분의 1보다 맞춘다.*/   
+        /* ▼내가 한 방법▼ */
+        /* main{display: flex; justify-content: center;}
+        section{width: 100vw; height: 400px; background-color: #c4ffce;}
+        section:not(:first-child){margin-left: 2%;}*/
+
+        /* footer */
+        footer{padding: 50px; background: #000; color: #fff; 
+            text-align: center;}
+        /* 1200 이하 */
+        /* 미디어쿼리 내부 선택자도 통일해서 적어주기 */
+        @media screen and (max-width: 1200px) {
+            main {width: 100%;}
+            section {height: 30vw;}
+        }
+        /* 1000이하 */
+        @media screen and (max-width: 1000px){
+            #header h1{left: 50%; transform: translateX(-50%);}
+            #member{right: 20px;}
+            .viewGnb{display: block;}            
+            #gnb{position: fixed; top: 0; left: -200px;
+                width: 200px; height: 100vh;
+                background: #555d5c; transition: 0.5s;}
+            #gnb ul{flex-direction: column;} /*display:block도 됨*/
+            #gnb ul li{text-align: center; line-height: 50px;}
+            #gnb ul li a{color: #fff;}
+            main{flex-flow: wrap;}
+            section{width: 49.5%;}
+            section:not(:last-child) {margin-right: 0;}
+            section:nth-child(odd){margin-right: 1%;}
+            section:nth-child(1), section:nth-child(2){ margin-bottom: 10px; }
+        }
+        /* 600이하 */
+        @media screen and (max-width: 600px){
+            section{width: 100%; margin: 0;}
+            section:nth-child(odd){margin: 0;}
+            section:nth-child(1), section:nth-child(2){margin: 0;}
+        }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <h1><a href="#">로고</a></h1>
+        <nav id="member">
+            <h2 class="hidden">멤버쉽 관련</h2>
+            <ul>
+                <li><a href="#">로그인</a></li>
+                <li><a href="#">회원관련</a></li>
+            </ul>
+        </nav>
+        <a href="#" class="viewGnb"><span class="hidden">Gnb보기</span></a>
+        <nav id="gnb">
+            <h2 class="hidden">주요 메뉴</h2>
+            <ul>
+                <li><a href="#">리스트1</a></li>
+                <li><a href="#">리스트2</a></li>
+                <li><a href="#">리스트3</a></li>
+                <li><a href="#">리스트4</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section><h2>컨텐츠1</h2></section>
+        <section><h2>컨텐츠2</h2></section>
+        <section><h2>컨텐츠3</h2></section>
+        <section><h2>컨텐츠4</h2></section>
+    </main>
+    <footer>
+        <address>푸터</address>
+    </footer>
+    <script>
+        const gnbBtn = document.querySelector('.viewGnb');
+        const gnb = document.getElementById("gnb");
+        gnbBtn.addEventListener("click", ()=>{
+            gnb.style.left = "0px";
+        })
+        gnb.addEventListener("mouseleave", ()=>{
+            gnb.style.left = "-200px";
+        })
+    </script>
+</body>
+</html>
